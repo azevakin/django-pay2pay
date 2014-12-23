@@ -1,0 +1,11 @@
+{% block content %}
+<h1>{{ payment.get_status_display }}</h1>
+<p>№ заказа: {{ response.order_id }}</p>
+<p>№ транзакции оплаты: {{ response.trans_id }}</p>
+{% if payment.error_status %}
+    <p><strong>
+        При передаче данных об оплате произошла ошибка: <br/>
+        {{ payment.error_status }}
+    </strong></p>
+{% endif %}
+{% endblock %}

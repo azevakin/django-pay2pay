@@ -12,3 +12,5 @@ PAY2PAY_FAIL_URL = getattr(settings, 'PAY2PAY_FAIL_URL')
 PAY2PAY_RESULT_URL = getattr(settings, 'PAY2PAY_RESULT_URL')
 PAY2PAY_TEST_MODE = getattr(settings, 'PAY2PAY_TEST_MODE', False)
 PAY2PAY_HIDE_FORM_FIELD = getattr(settings, 'PAY2PAY_HIDE_FORM_FIELD', True)
+PAY2PAY_CONTACTS_URL = getattr(settings, 'PAY2PAY_CONTACTS_URL',
+                               'http://www.pay2pay.com/contacts.html')
