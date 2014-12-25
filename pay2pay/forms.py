@@ -4,8 +4,7 @@ import conf
 import base64
 from django import forms
 from inspect import isfunction
-from .utils import get_signature
-from .utils import build_xml_string
+from .utils import get_signature, build_xml_string, get_urls
 from .models import Payment
 
 
@@ -16,14 +15,10 @@ class PayForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PayForm, self).__init__(*args, **kwargs)
 
-        data = {
-            'success_url': conf.PAY2PAY_SUCCESS_URL,
-            'fail_url': conf.PAY2PAY_FAIL_URL,
-            'result_url': conf.PAY2PAY_RESULT_URL,
-        }
+        initial = kwargs.get('initial', {})
+        data = get_urls(initial.get('site'))
         if conf.PAY2PAY_TEST_MODE:
             data['test_mode'] = 1
-        initial = kwargs.get('initial', {})
         for name in Payment.names:
             if name in initial:
                 data[name] = initial[name]

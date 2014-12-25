@@ -3,7 +3,7 @@
 import conf
 from django.db import models
 from .signals import payment_process, payment_completed, payment_fail
-from .utils import build_xml_string, get_signature
+from .utils import build_xml_string, get_signature, get_urls
 
 
 class Payment(models.Model):
@@ -54,6 +54,8 @@ class Payment(models.Model):
     updated = models.DateTimeField('Обновлен', auto_now=True)
     created = models.DateTimeField('Создан', auto_now_add=True)
 
+    site = models.ForeignKey('sites.Site', blank=True, null=True)
+
     def __unicode__(self):
         return '%s <%s>' % (
             self.order_id,
@@ -84,12 +86,11 @@ class Payment(models.Model):
         data = self._get_xml_data()
         return build_xml_string(data)
 
+    def get_urls(self, domain=None):
+        return get_urls(domain or self.site)
+
     def _get_xml_data(self):
-        data = {
-            'success_url': conf.PAY2PAY_SUCCESS_URL,
-            'fail_url': conf.PAY2PAY_FAIL_URL,
-            'result_url': conf.PAY2PAY_RESULT_URL,
-        }
+        data = self.get_urls()
         if conf.PAY2PAY_TEST_MODE:
             data['test_mode'] = 1
         for name in self.names:

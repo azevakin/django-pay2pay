@@ -5,6 +5,10 @@ import hashlib
 import lxml.etree
 import lxml.builder
 
+from django.contrib.sites.models import Site
+
+from . import conf
+
 
 def build_xml_string(data):
     e = lxml.builder.ElementMaker()
@@ -45,3 +49,13 @@ def get_signature(xml, key):
     sign_md5 = hsh.hexdigest()
     sign_encode = base64.b64encode(sign_md5)
     return sign_encode
+
+
+def get_urls(domain=None):
+    domain = isinstance(domain, Site) and domain.domain or domain or ''
+    scheme = domain and 'http://' or ''
+    return {key: '{0}{1}{2}'.format(scheme, domain, path)
+            for key, path in (('success_url', conf.PAY2PAY_SUCCESS_URL),
+                              ('fail_url', conf.PAY2PAY_FAIL_URL),
+                              ('result_url', conf.PAY2PAY_RESULT_URL))}
+
